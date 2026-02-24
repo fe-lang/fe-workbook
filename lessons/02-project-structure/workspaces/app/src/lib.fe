@@ -1,0 +1,6 @@
+use math::add
+
+pub fn answer() -> u256 {
+    add(20, 22)
+}
+

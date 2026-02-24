@@ -1,0 +1,5 @@
+[workspace]
+name = "problem_01_new_counter"
+version = "0.1.0"
+members = ["counter_test", "counter"]
+exclude = ["out", "target"]

@@ -1,0 +1,8 @@
+[ingot]
+name = "counter_test"
+version = "0.1.0"
+
+[dependencies]
+# The first problem is to create this missing workspace member via `fe new`.
+counter = true
+

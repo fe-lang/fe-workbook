@@ -1,0 +1,5 @@
+[ingot]
+# EXERCISE: workspace expects name "math" (and version 0.1.0).
+name = "maths"
+version = "0.1.0"
+

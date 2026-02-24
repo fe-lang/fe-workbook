@@ -1,0 +1,11 @@
+[workspace]
+name = "problem_06_workspaces"
+version = "0.1.0"
+members = [
+  { path = "math", name = "math", version = "0.1.0" },
+  { path = "app", name = "app", version = "0.1.0" },
+]
+
+[dependencies]
+# EXERCISE: this alias conflicts with the workspace member name `math`.
+math = { path = "vendor/math_dep", name = "math_dep", version = "0.1.0" }

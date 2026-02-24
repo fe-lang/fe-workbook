@@ -1,0 +1,9 @@
+// EXERCISE: this import uses the ingot *name* ("utils"), but the dependency alias is "helpers".
+use utils::add
+
+// EXERCISE: `messages/` exists, but it won't be discovered until `src/messages.fe` exists.
+pub use messages::Transfer
+
+pub fn total(a: u256, b: u256) -> u256 {
+    add(a, b)
+}

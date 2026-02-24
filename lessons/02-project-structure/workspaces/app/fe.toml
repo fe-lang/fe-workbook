@@ -1,0 +1,8 @@
+[ingot]
+name = "app"
+version = "0.1.0"
+
+[dependencies]
+# Resolves to a workspace member by name.
+math = true
+

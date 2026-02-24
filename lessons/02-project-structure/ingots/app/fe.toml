@@ -1,0 +1,8 @@
+[ingot]
+name = "app"
+version = "0.1.0"
+
+[dependencies]
+# EXERCISE: the alias is `helpers`, so imports should start with `helpers::...`.
+helpers = { path = "../utils" }
+

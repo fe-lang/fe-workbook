@@ -1,0 +1,37 @@
+// Effects are explicit capabilities: if a function needs one, it must say so in `uses (...)`.
+//
+// This file is intentionally broken. Fix it by following the `PROBLEM:` comments.
+
+use std::evm::effects::assert
+
+pub struct Counter { pub value: u256 }
+
+fn inc() uses (counter: mut Counter) {
+    counter.value = counter.value + 1
+}
+
+fn read() -> u256 uses (counter: Counter) {
+    counter.value
+}
+
+// PROBLEM: this function calls effectful functions but declares no effects.
+fn bump_twice() -> u256 {
+    inc()
+    inc()
+    read()
+}
+
+#[test]
+fn test_bump_twice() {
+    // PROBLEM: this binding must be mutable to satisfy `counter: mut Counter`.
+    let counter = Counter { value: 0 }
+
+    with (Counter = counter) {
+        let value = bump_twice()
+        assert(value == 2)
+    }
+
+    // PROBLEM: effects from `with` do not leak out of the block.
+    let _after = read()
+    let _ = _after
+}

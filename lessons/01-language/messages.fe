@@ -1,0 +1,96 @@
+// Messages (`msg`) define a contract's public interface.
+//
+// This file is intentionally broken. Fix it by following the `PROBLEM:` comments:
+// - every variant must have an explicit `#[selector = ...]`
+// - selectors must be unique across *all* recv blocks in a contract
+// - named `recv Msg { ... }` blocks must be exhaustive (handle every variant)
+
+use std::evm::{Call, Evm}
+use std::evm::effects::assert
+
+struct Store { value: u256 }
+
+msg CounterMsg {
+    #[selector = 0x00000001]
+    Inc { by: u256 },
+
+    #[selector = 0x00000002]
+    Get {} -> u256,
+
+    // PROBLEM: missing selector (selectors are required).
+    Reset {},
+}
+
+msg AdminMsg {
+    // PROBLEM: selector collision (must be unique across ALL recv blocks in a contract).
+    #[selector = 0x00000002]
+    Nuke {},
+}
+
+pub contract Counter {
+    mut store: Store,
+
+    init() uses (mut store) { store.value = 0 }
+
+    recv CounterMsg {
+        Inc { by } uses (mut store) {
+            store.value = store.value + by
+        }
+
+        // PROBLEM: wrong return type.
+        Get {} -> u256 uses (store) {
+            true
+        }
+
+        // PROBLEM: named recv blocks must be exhaustive (Reset is missing).
+    }
+
+    recv AdminMsg {
+        Nuke {} uses (mut store) {
+            store.value = 0
+        }
+    }
+}
+
+#[test]
+fn test_counter_messages() uses (evm: mut Evm) {
+    let addr = evm.create2<Counter>(value: 0, args: (), salt: 0)
+
+    let val: u256 = evm.call(
+            addr: addr,
+            gas: 100000,
+            value: 0,
+            message: CounterMsg::Get {},
+        )
+    assert(val == 0)
+
+    evm.call(
+        addr: addr,
+        gas: 100000,
+        value: 0,
+        message: CounterMsg::Inc { by: 2 },
+    )
+
+    let val: u256 = evm.call(
+            addr: addr,
+            gas: 100000,
+            value: 0,
+            message: CounterMsg::Get {},
+        )
+    assert(val == 2)
+
+    evm.call(
+        addr: addr,
+        gas: 100000,
+        value: 0,
+        message: CounterMsg::Reset {},
+    )
+
+    let val: u256 = evm.call(
+            addr: addr,
+            gas: 100000,
+            value: 0,
+            message: CounterMsg::Get {},
+        )
+    assert(val == 0)
+}

@@ -1,0 +1,43 @@
+use std::evm::effects::assert
+
+trait Double {
+    fn double(self) -> Self
+}
+
+impl Double for u256 {
+    fn double(self) -> Self {
+        self + self
+    }
+}
+
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+fn widen(x: u8) -> u256 {
+    x as u256
+}
+
+fn unwrap_or_zero(opt: Option<u256>) -> u256 {
+    match opt {
+        Option::Some(v) => v,
+        Option::None => 0,
+    }
+}
+
+fn twice<T: Double>(x: T) -> T {
+    x.double()
+}
+
+#[test]
+fn test_types() {
+    let a = widen(5)
+    let b = unwrap_or_zero(Option::None)
+    let c: u256 = twice(21)
+
+    assert(a == 5)
+    assert(b == 0)
+    assert(c == 42)
+}
+

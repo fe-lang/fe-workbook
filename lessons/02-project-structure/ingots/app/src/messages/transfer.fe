@@ -1,0 +1,5 @@
+pub struct Transfer {
+    pub to: u256,
+    pub amount: u256,
+}
+
