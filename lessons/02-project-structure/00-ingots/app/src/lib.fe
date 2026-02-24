@@ -1,4 +1,4 @@
-// EXERCISE: this import uses the ingot *name* ("utils"), but the dependency alias is "helpers".
+// EXERCISE: this import uses the ingot name `utils`, but the dependency alias is `helpers`.
 use utils::add
 
 // EXERCISE: `messages/` exists, but it won't be discovered until `src/messages.fe` exists.

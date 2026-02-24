@@ -2,8 +2,6 @@
 //
 // This file is intentionally broken. Fix it by following the `PROBLEM:` comments.
 
-use std::evm::effects::assert
-
 pub struct Counter { pub value: u256 }
 
 fn inc() uses (counter: mut Counter) {
@@ -14,7 +12,13 @@ fn read() -> u256 uses (counter: Counter) {
     counter.value
 }
 
+// PROBLEM: this function mutates `counter` but does not request `counter: mut Counter`.
+fn reset() uses (counter: Counter) {
+    counter.value = 0
+}
+
 // PROBLEM: this function calls effectful functions but declares no effects.
+// HINT: it needs (at least) the effects required by `inc()` and `read()`.
 fn bump_twice() -> u256 {
     inc()
     inc()
@@ -23,15 +27,17 @@ fn bump_twice() -> u256 {
 
 #[test]
 fn test_bump_twice() {
-    // PROBLEM: this binding must be mutable to satisfy `counter: mut Counter`.
+    // HINT: make this binding mutable so the `with` block can provide `counter: mut Counter`.
     let counter = Counter { value: 0 }
 
     with (Counter = counter) {
+        // PROBLEM: the `with` block is providing an immutable `Counter` capability.
         let value = bump_twice()
         assert(value == 2)
     }
 
-    // PROBLEM: effects from `with` do not leak out of the block.
-    let _after = read()
-    let _ = _after
+    // PROBLEM: effects must be contained inside the `with` block.
+    reset()
+    let value = read()
+    assert(value == 1)
 }

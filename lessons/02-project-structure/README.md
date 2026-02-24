@@ -1,8 +1,9 @@
-# Lesson 02 — Project structure
+# Lesson 02 — Project Structure
 
-Two exercises:
+Two exercises focused on how Fe projects are laid out on disk.
 
-- `ingots/` (05): dependency aliases + module file layout
-- `workspaces/` (06): workspace members + resolution rules
+## Goal
 
-Start with the READMEs in those directories.
+- Understand ingot layout (`fe.toml`, `src/lib.fe`) and module discovery rules
+- Understand workspaces: members, metadata constraints, and dependency alias rules
+

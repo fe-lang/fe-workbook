@@ -1,36 +1,36 @@
-# Lesson 00 — Getting started
+# Lesson 00 — Getting Started
 
-This lesson is a tiny **workspace** with one member that exists (`counter_test/`) and one member that is intentionally missing (`counter/`).
+This lesson is a single, standalone Fe contract: `cool_coin.fe` (an ERC‑20 token called “CoolCoin”).
 
-Your job is to create the missing `counter` ingot using `fe new`, then run the tests.
+## Goal
+
+- Make sure the `fe` CLI works on your machine
+- Learn the basic workflow: `check` →  `test` →  `build`
+- See what a test looks like
 
 ## Run
 
-From this directory:
+From the repo root:
 
 ```bash
 cd lessons/00-getting-started
-fe test counter_test
+
+# Typecheck + diagnostics (fast)
+fe check cool_coin.fe
+
+# Compile to bytecode (writes artifacts to `out/` by default)
+fe build cool_coin.fe
+
+# Run the ERC20 test suite (tests live at the bottom of `cool_coin.fe`)
+fe test cool_coin.fe
 ```
 
-You should see an error because the workspace member `counter` is missing.
+## What’s in the contract?
 
-## Fix
+`CoolCoin` implements the ERC‑20 interface:
 
-Create the missing member (from the workspace root):
+- `name`, `symbol`, `decimals`
+- `totalSupply`, `balanceOf`, `allowance`
+- `transfer`, `approve`, `transferFrom`
+- plus a simple `mint(address,uint256)` extension (used by the tests)
 
-```bash
-fe new counter
-```
-
-Then re-run the tests:
-
-```bash
-fe test counter_test
-```
-
-If you want to run the tests that `fe new` generated in the `counter` ingot too:
-
-```bash
-fe test counter
-```

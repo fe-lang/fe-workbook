@@ -1,36 +1,27 @@
-# Fe workbook
+# Fe Workbook
 
-This repo is a workbook for learning Fe (EVM smart contracts + the Fe toolchain).
+A small workbook for learning the Fe language via intentionally broken exercises.
 
-Exercises live under `lessons/`.
+All exercises live under `lessons/`.
 
-Some lessons also include `.solutions/` directories as instructor reference (currently only Lesson 01).
+## Prerequisites
 
-## Prereqs
+- The `fe` CLI
+  - Install: `$ curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash` 
+- Optional: `solc` if you want to use the Yul backend (`--backend yul`)
+- An editor with Fe syntax/LSP support (you can run `fe lsp`)
+  - [zed](https://github.com/fe-lang/zed-fe)
+  - [emacs](https://github.com/fe-lang/emacs-fe)
+  - [neovim](https://github.com/fe-lang/nvim-fe)
+  - [vscode](https://github.com/fe-lang/vscode-fe)
 
-- A `fe` binary:
-  - preferred: `../fe/target/debug/fe` (this repo layout), or
-  - fallback: `fe` in your `PATH`
+## How to use this repo
 
-## Quickstart
-
-```bash
-fe --version
-```
+- Each lesson has a `README.md` with run instructions.
+- Exercises are meant to be fixed. Follow the `PROBLEM:` / `EXERCISE:` markers and compiler errors until things compile and tests pass.
 
 ## Start here
 
-- Lesson 00: `lessons/00-getting-started/README.md`
-- Lesson 01: `lessons/01-language/README.md`
-- Lesson 02: `lessons/02-project-structure/README.md`
-
-Sanity checks:
-
-- FITS: `fits/README.md`
-
-## Docs pointers (for the instructor)
-
-- Effects: `../www/src/content/docs/effects/`
-- Messages: `../www/src/content/docs/messages/`
-- Ingots/workspaces: `../www/src/content/docs/ingots/`
-- CLI behavior notes: `../fe/CLI.md`
+- Lesson 00 — Getting Started: `lessons/00-getting-started/README.md`
+- Lesson 01 — Language Basics: `lessons/01-language/README.md`
+- Lesson 02 — Project Structure: `lessons/02-project-structure/README.md`

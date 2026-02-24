@@ -1,0 +1,70 @@
+// Messages (`msg`) define a contract's public interface.
+//
+// This file is intentionally broken. Fix it by following the `PROBLEM:` comments:
+// - every variant must have an explicit `#[selector = ...]`
+// - selectors must be unique across *all* recv blocks in a contract
+
+struct Store { value: u256, limit: u256 }
+
+msg CounterMsg {
+    #[selector = 0x00000001]
+    Inc { by: u256 },
+
+    #[selector = 0x00000002]
+    Get {} -> u256,
+
+    // PROBLEM: missing selector (selectors are required).
+    Reset {},
+}
+
+msg ConfigMsg {
+    #[selector = 0x00000004]
+    SetLimit { limit: u256 },
+
+    // PROBLEM: selector collision (must be unique across ALL recv blocks in a contract).
+    #[selector = 0x00000001]
+    GetLimit {} -> u256,
+}
+
+pub contract Counter {
+    mut store: Store,
+
+    init()
+    uses (mut store)
+    {
+        store.value = 0
+        store.limit = 10
+    }
+
+    recv CounterMsg {
+        Inc { by } uses (mut store) {
+            let next = store.value + by
+            if next > store.limit {
+                store.value = store.limit
+            } else {
+                store.value = next
+            }
+        }
+
+        Get {} -> u256 uses (store) {
+            store.value
+        }
+
+        Reset {} uses (mut store) {
+            store.value = 0
+        }
+    }
+
+    recv ConfigMsg {
+        SetLimit { limit } uses (mut store) {
+            store.limit = limit
+            if store.value > store.limit {
+                store.value = store.limit
+            }
+        }
+
+        GetLimit {} -> u256 uses (store) {
+            store.limit
+        }
+    }
+}

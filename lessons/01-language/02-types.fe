@@ -1,5 +1,3 @@
-use std::evm::effects::assert
-
 trait Double {
     fn double(self) -> Self
 }
@@ -10,18 +8,9 @@ impl Double for u256 {
     }
 }
 
-enum Option<T> {
-    Some(T),
-    None,
-}
-
-fn widen(x: u8) -> u256 {
-    // PROBLEM: `u8` does not implicitly widen to `u256`.
-    x
-}
-
 fn unwrap_or_zero(opt: Option<u256>) -> u256 {
     // PROBLEM: make this match exhaustive.
+    // HINT: `Option` has two variants: `Some` and `None`.
     match opt {
         Option::Some(v) => v,
     }
@@ -29,16 +18,17 @@ fn unwrap_or_zero(opt: Option<u256>) -> u256 {
 
 fn twice<T>(x: T) -> T {
     // PROBLEM: add the right trait bound to T.
+    // HINT: `double()` comes from the `Double` trait.
+    // HINT: Constrain `T` to types that implement `Double` (Rust-style `T: Double`).
+    // HINT: That way the compiler knows `x.double()` is available.
     x.double()
 }
 
 #[test]
 fn test_types() {
-    let a = widen(5)
-    let b = unwrap_or_zero(Option::None)
-    let c: u256 = twice(21)
+    let a = unwrap_or_zero(Option::None)
+    let b: u256 = twice(21)
 
-    assert(a == 5)
-    assert(b == 0)
-    assert(c == 42)
+    assert(a == 0)
+    assert(b == 42)
 }

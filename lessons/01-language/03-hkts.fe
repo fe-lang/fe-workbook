@@ -1,0 +1,74 @@
+// Higher-kinded types (HKTs) let us write code generic over "containers" like `Option<T>`
+// and partially-applied `Result<E, T>` (think `Result<E>` as a 1-parameter type constructor).
+//
+// This example adds two `u256`s *inside* such a container:
+// - `Option`: returns `None` if either input is `None`
+// - `Result`: returns the first `Err` encountered
+//
+// This file is intentionally broken. Fix it by following the `PROBLEM:` comments.
+
+use core::functional::{Fn, Functor, Applicative}
+
+enum AddError {
+    LeftUnavailable,
+    RightUnavailable,
+}
+
+struct MakeAdder {}
+
+struct AddRight { left: u256 }
+
+impl Fn<u256, AddRight> for MakeAdder {
+    fn call(self, _ value: own u256) -> AddRight {
+        AddRight { left: value }
+    }
+}
+
+impl Fn<u256, u256> for AddRight {
+    fn call(self, _ right: own u256) -> u256 {
+        self.left + right
+    }
+}
+
+/// Add two values inside any container that supports `map` + `ap`.
+// PROBLEM: `C` is used like a type constructor (`C<u256>`), but it's missing a kind bound.
+// Fix by adding `C: * -> *` (and keep the trait bound that provides `map`/`ap`).
+fn add_in<C: Applicative>(a: own C<u256>, b: own C<u256>) -> C<u256> {
+    let f: C<AddRight> = a.map(MakeAdder {})
+    f.ap(b)
+}
+
+#[test]
+fn test_hkts_add_in_option_and_result() {
+    let opt_sum: Option<u256> = add_in(a: Some(20), b: Some(22))
+    match opt_sum {
+        Some(v) => assert(v == 42),
+        None => assert(false),
+    }
+
+    let opt_missing: Option<u256> = add_in(a: None, b: Some(1))
+    match opt_missing {
+        None => assert(true),
+        Some(_) => assert(false),
+    }
+
+    // PROBLEM: `Result` has two type parameters (`Result<E, T>`). To use it as a 1-parameter
+    // container in `add_in`, pick an error type and add annotations like `Result<AddError, u256>`.
+    let res_sum = add_in(a: Ok(20), b: Ok(22))
+    match res_sum {
+        Ok(v) => assert(v == 42),
+        Err(_) => assert(false),
+    }
+
+    let res_err_left = add_in(a: Err(AddError::LeftUnavailable), b: Ok(1))
+    match res_err_left {
+        Err(AddError::LeftUnavailable) => assert(true),
+        _ => assert(false),
+    }
+
+    let res_err_right = add_in(a: Ok(1), b: Err(AddError::RightUnavailable))
+    match res_err_right {
+        Err(AddError::RightUnavailable) => assert(true),
+        _ => assert(false),
+    }
+}

@@ -1,19 +1,31 @@
-# Lesson 01 — Language basics
+# Lesson 01 — Language Basics
 
-Each exercise is a standalone `.fe` file and includes a `#[test]`.
+Each file in this directory is a small, intentionally broken Fe program. Fix the `PROBLEM:` markers until the file compiles (and the tests pass, where present).
 
-Run (from this directory):
+## Goal
+
+Practice basic language features:
+
+- contract messages and selectors (`msg`, `recv`)
+- effects and capability scoping (`uses (...)`, `with (...)`)
+- types: exhaustive `match` and trait bounds
+- higher-kinded types (kinds like `* -> *`) with `Functor`/`Applicative`
+
+## Exercises
+
+- `00-messages.fe` — Fix missing/duplicate message selectors.
+- `01-effects.fe` — Fix missing effect declarations and mutability issues.
+- `02-types.fe` — Make a `match` exhaustive and add a trait bound.
+- `03-hkts.fe` — Add a kind bound and type annotations for `Result`.
+
+## Run
+
+From the repo root:
 
 ```bash
-fe test effects.fe
-fe test messages.fe
-fe test types.fe
-```
-
-Solutions (for now) are in `.solutions/src/`:
-
-```bash
-fe test .solutions/src/effects.fe
-fe test .solutions/src/messages.fe
-fe test .solutions/src/types.fe
+cd lessons/01-language
+fe test 00-messages.fe
+fe test 01-effects.fe
+fe test 02-types.fe
+fe test 03-hkts.fe
 ```
