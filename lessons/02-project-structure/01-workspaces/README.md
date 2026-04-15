@@ -37,9 +37,9 @@ fe check .
 
 ## Extra (CLI targeting)
 
-From inside the workspace root you can also target a member by **name**:
+From inside the workspace root you can target a single member ingot (recommended):
 
 ```bash
-fe check math
-fe check app
+fe check --ingot math .
+fe check --ingot app .
 ```

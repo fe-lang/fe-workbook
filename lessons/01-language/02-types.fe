@@ -23,12 +23,3 @@ fn twice<T>(x: T) -> T {
     // HINT: That way the compiler knows `x.double()` is available.
     x.double()
 }
-
-#[test]
-fn test_types() {
-    let a = unwrap_or_zero(Option::None)
-    let b: u256 = twice(21)
-
-    assert(a == 0)
-    assert(b == 42)
-}

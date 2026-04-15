@@ -6,9 +6,13 @@ All exercises live under `lessons/`.
 
 ## Prerequisites
 
-- The `fe` CLI
-  - Install: `$ curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash` 
+- The `fe` CLI (this repo is tested with Fe v26.x, April 2026)
+  - Recommended: `curl -fsSL https://raw.githubusercontent.com/argotorg/fe/master/feup/feup.sh | bash`
+    - After install, restart your shell or run: `source ~/.fe/env`
+  - macOS (Homebrew): `brew install fe-lang/tap/fe`
+  - Updating later: `feup` (installed by the script above)
 - Optional: `solc` if you want to use the Yul backend (`--backend yul`)
+  - Provide via `--solc <path>` or `FE_SOLC_PATH`
 - An editor with Fe syntax/LSP support (you can run `fe lsp`)
   - [zed](https://github.com/fe-lang/zed-fe)
   - [emacs](https://github.com/fe-lang/emacs-fe)

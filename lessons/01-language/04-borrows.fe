@@ -1,0 +1,47 @@
+// Borrow handles (`mut T` / `ref T`) are explicit, pointer-like values that give access to a *place*.
+//
+// You create them from a place with:
+// - `ref x`  → a shared handle (`ref T`)
+// - `mut x`  → an exclusive handle (`mut T`)
+//
+// This file is intentionally broken. Fix it by following the `PROBLEM:` comments.
+// After fixing, `fe check 04-borrows.fe` should pass.
+
+fn set_to(handle: mut u256, value: u256) {
+    handle = value
+}
+
+fn read_then_inc() -> u256 {
+    let mut x: u256 = 40
+
+    let r: ref u256 = ref x
+
+    // PROBLEM: `before` is a `ref u256` handle, which keeps `x` immutably borrowed.
+    // We want `before` to be a copied `u256` value so we can later take `mut x`.
+    // HINT: change the type to `u256` (a copy).
+    let before: ref u256 = r
+
+    let p: mut u256 = mut x
+
+    p += 2
+
+    let after: u256 = p
+    before + after
+}
+
+fn reborrow_scoping() -> u256 {
+    let mut x: u256 = 0
+    let p: mut u256 = mut x
+
+    // PROBLEM: `q` is a reborrow of `p`. While `q` is live, `p` is frozen.
+    // HINT: fix by either:
+    // - consuming `q` first (so it stops being live), then using `p`, or
+    // - skipping `q` and calling `set_to(handle: mut p, ...)` directly.
+    let q: mut u256 = mut p
+
+    p = 11
+    set_to(handle: q, value: 10) // consumes `q`
+
+    let out: u256 = p
+    out
+}

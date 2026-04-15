@@ -25,19 +25,13 @@ fn bump_twice() -> u256 {
     read()
 }
 
-#[test]
-fn test_bump_twice() {
-    // HINT: make this binding mutable so the `with` block can provide `counter: mut Counter`.
-    let counter = Counter { value: 0 }
+// This isn't part of the exercise, but you can use a `with` block to provide effects:
+pub fn effects_with_block() -> u256 {
+    let mut counter = Counter { value: 0 }
 
     with (Counter = counter) {
-        // PROBLEM: the `with` block is providing an immutable `Counter` capability.
-        let value = bump_twice()
-        assert(value == 2)
+        inc()
+        inc()
+        read()
     }
-
-    // PROBLEM: effects must be contained inside the `with` block.
-    reset()
-    let value = read()
-    assert(value == 1)
 }
